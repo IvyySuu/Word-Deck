@@ -491,18 +491,64 @@ input, textarea { font-family: var(--font); outline: none; }
 #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 
 /* ── Install banner ── */
-#install-banner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  background: var(--surface); border-top: 1px solid var(--border);
-  padding: 16px; display: none;
-  animation: slideUp 0.4s ease;
+/* ── Install Modal ── */
+#install-modal {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+  display: none; align-items: flex-end; justify-content: center;
 }
-#install-banner.show { display: block; }
-.install-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.install-steps { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 12px; }
-.install-close {
-  position: absolute; top: 12px; right: 14px; color: var(--text3); font-size: 20px;
+#install-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+#install-modal-inner {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  padding: 28px 24px 40px;
+  width: 100%; max-width: 480px;
+  animation: slideUp 0.4s cubic-bezier(0.34,1.1,0.64,1);
 }
+.install-drag-handle {
+  width: 36px; height: 4px; background: var(--surface3);
+  border-radius: 2px; margin: 0 auto 24px;
+}
+.install-icon {
+  font-size: 48px; text-align: center; margin-bottom: 14px;
+  display: block;
+}
+.install-modal-title {
+  font-size: 20px; font-weight: 700; text-align: center;
+  margin-bottom: 10px; font-family: var(--serif);
+}
+.install-modal-desc {
+  font-size: 14px; color: var(--text2); text-align: center;
+  line-height: 1.7; margin-bottom: 20px;
+}
+.install-steps-box {
+  background: var(--surface2); border-radius: var(--radius-sm);
+  padding: 16px 18px; margin-bottom: 10px;
+}
+.install-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 10px;
+}
+.install-step:last-child { margin-bottom: 0; }
+.install-step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--accent2); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.install-modal-note {
+  font-size: 12px; color: var(--text3); text-align: center;
+  margin-bottom: 20px; line-height: 1.5;
+}
+.install-modal-btn {
+  width: 100%; padding: 15px; border-radius: 14px;
+  background: var(--accent2); color: #fff;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: filter var(--transition);
+}
+.install-modal-btn:hover { filter: brightness(1.1); }
+
 #notify-modal .modal { border-radius: var(--radius); max-width: 340px; margin: 20px; }
 #notify-modal .modal { align-self: center; }
 #notify-modal { align-items: center; }
@@ -806,10 +852,17 @@ input, textarea { font-family: var(--font); outline: none; }
 </div>
 
 <!-- Install Banner -->
-<div id="install-banner">
-  <button class="install-close" onclick="document.getElementById('install-banner').classList.remove('show')">×</button>
-  <div class="install-title">Add to Home Screen</div>
-  <div class="install-steps" id="install-steps"></div>
+<!-- Install Modal -->
+<div id="install-modal">
+  <div id="install-modal-inner">
+    <div class="install-drag-handle"></div>
+    <span class="install-icon" id="install-icon">📲</span>
+    <div class="install-modal-title" id="install-modal-title">Add to Home Screen</div>
+    <div class="install-modal-desc" id="install-modal-desc"></div>
+    <div class="install-steps-box" id="install-steps-box"></div>
+    <div class="install-modal-note" id="install-modal-note"></div>
+    <button class="install-modal-btn" onclick="closeInstallModal()">Got it! 👍</button>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -1876,19 +1929,64 @@ function showInstallBanner() {
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isAndroid = /Android/.test(navigator.userAgent);
+  if (!isIOS && !isAndroid) return; // 桌機不顯示
 
-  const banner = document.getElementById('install-banner');
-  const steps = document.getElementById('install-steps');
+  const modal = document.getElementById('install-modal');
+  const icon = document.getElementById('install-icon');
+  const title = document.getElementById('install-modal-title');
+  const desc = document.getElementById('install-modal-desc');
+  const stepsBox = document.getElementById('install-steps-box');
+  const note = document.getElementById('install-modal-note');
 
   if (isIOS) {
-    steps.innerHTML = '1. Tap the Share button (□↑) at the bottom\n2. Scroll and tap "Add to Home Screen"\n3. Tap "Add" to confirm';
-    banner.classList.add('show');
-    localStorage.setItem('install_shown', '1');
-  } else if (isAndroid) {
-    steps.innerHTML = '1. Tap the ⋮ menu in Chrome\n2. Tap "Add to Home screen"\n3. Tap "Add" to confirm';
-    banner.classList.add('show');
-    localStorage.setItem('install_shown', '1');
+    icon.textContent = '📱';
+    title.textContent = 'Add to iPhone Home Screen';
+    desc.textContent = 'Add Word Deck to your home screen to use it like a native app — your words and progress will be saved on your device.';
+    stepsBox.innerHTML = `
+      <div class="install-step">
+        <div class="install-step-num">1</div>
+        <div>Tap the <strong>Share button</strong> <span style="font-size:16px">⎙</span> at the bottom of Safari</div>
+      </div>
+      <div class="install-step">
+        <div class="install-step-num">2</div>
+        <div>Scroll down and tap <strong>"Add to Home Screen"</strong></div>
+      </div>
+      <div class="install-step">
+        <div class="install-step-num">3</div>
+        <div>Tap <strong>"Add"</strong> in the top right to confirm</div>
+      </div>
+    `;
+    note.textContent = 'After adding, your data will be stored on your device and won\'t disappear when you close the browser.';
+  } else {
+    icon.textContent = '🤖';
+    title.textContent = 'Add to Android Home Screen';
+    desc.textContent = 'Add Word Deck to your home screen for a full-screen experience — your words and progress will be saved on your device.';
+    stepsBox.innerHTML = `
+      <div class="install-step">
+        <div class="install-step-num">1</div>
+        <div>Tap the <strong>⋮ menu</strong> in the top right of Chrome</div>
+      </div>
+      <div class="install-step">
+        <div class="install-step-num">2</div>
+        <div>Tap <strong>"Add to Home screen"</strong></div>
+      </div>
+      <div class="install-step">
+        <div class="install-step-num">3</div>
+        <div>Tap <strong>"Add"</strong> to confirm</div>
+      </div>
+    `;
+    note.textContent = 'After adding, your data will be stored on your device and won\'t disappear when you close the browser.';
   }
+
+  // 延遲 1.5 秒後顯示（等 splash screen 結束）
+  setTimeout(() => {
+    modal.classList.add('show');
+    localStorage.setItem('install_shown', '1');
+  }, 1500);
+}
+
+function closeInstallModal() {
+  document.getElementById('install-modal').classList.remove('show');
 }
 
 // ══════════════════════════════════════
