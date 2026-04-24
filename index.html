@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Word Deck — English Vocabulary</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0e17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0e17;
+  --surface: #1a1929;
+  --surface2: #252440;
+  --surface3: #2e2c50;
+  --accent: #e8a87c;
+  --accent2: #9b8ef7;
+  --accent3: #6de8c4;
+  --danger: #f76e6e;
+  --text: #fffffe;
+  --text2: #a7a5c0;
+  --text3: #6b6987;
+  --border: rgba(255,255,255,0.07);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Noto Serif', serif;
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+.light {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #eeecf8;
+  --surface3: #e4e2f5;
+  --accent2: #6c5ce7;
+  --text: #1a1929;
+  --text2: #5a5870;
+  --text3: #9896af;
+  --border: rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font); }
+body { display: flex; flex-direction: column; }
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; background: none; color: inherit; }
+input, textarea { font-family: var(--font); outline: none; }
+
+/* ── Header ── */
+#header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg);
+  position: relative; z-index: 10;
+}
+#app-title {
+  font-family: var(--serif); font-size: 18px; font-weight: 700;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-actions { display: flex; align-items: center; gap: 6px; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface2); color: var(--text2);
+  font-size: 15px; transition: all var(--transition);
+}
+.icon-btn:hover { background: var(--surface3); color: var(--text); }
+#streak-badge {
+  padding: 4px 10px; border-radius: 20px;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: #fff; font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* ── Tabs ── */
+#tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  flex-shrink: 0; background: var(--bg); overflow-x: auto;
+  scrollbar-width: none;
+}
+#tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1; min-width: 60px; padding: 10px 4px 9px;
+  font-size: 10px; font-weight: 500; color: var(--text3);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  transition: color var(--transition); white-space: nowrap;
+  border-bottom: 2px solid transparent; position: relative; bottom: -1px;
+}
+.tab-btn .tab-icon { font-size: 18px; line-height: 1; }
+.tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+
+/* ── Main content ── */
+#main { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+#main::-webkit-scrollbar { width: 4px; }
+#main::-webkit-scrollbar-track { background: transparent; }
+#main::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+.tab-panel { display: none; min-height: 100%; padding: 16px; }
+.tab-panel.active { display: block; }
+
+/* ── Mode toggle ── */
+.mode-toggle {
+  display: flex; background: var(--surface); border-radius: 10px;
+  padding: 3px; gap: 2px; margin-bottom: 16px;
+}
+.mode-btn {
+  flex: 1; padding: 7px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 500; color: var(--text2);
+  transition: all var(--transition); text-align: center;
+}
+.mode-btn.active { background: var(--accent2); color: #fff; }
+
+/* ── Flashcard ── */
+#fc-container {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px; padding-top: 8px;
+}
+#fc-card-wrap { width: 100%; max-width: 420px; perspective: 1000px; cursor: pointer; }
+#fc-card {
+  width: 100%; min-height: 200px; position: relative;
+  transform-style: preserve-3d; transition: transform 0.5s ease;
+  border-radius: var(--radius); user-select: none;
+}
+#fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute; inset: 0; border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 28px 24px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border: 1px solid var(--border);
+}
+.fc-front { background: var(--surface); }
+.fc-back { background: var(--surface2); transform: rotateY(180deg); }
+.fc-word {
+  font-family: var(--serif); font-size: 36px; font-weight: 700;
+  text-align: center; color: var(--text); line-height: 1.2; margin-bottom: 8px;
+}
+.fc-phonetic {
+  font-family: var(--mono); font-size: 14px; color: var(--text3); margin-bottom: 4px;
+}
+.fc-pos { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.fc-meaning { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; text-align: center; }
+.fc-example {
+  font-size: 13px; color: var(--text2); text-align: center; line-height: 1.6;
+  font-style: italic; padding: 0 8px;
+}
+.fc-example em { color: var(--accent3); font-style: normal; font-weight: 500; }
+.fc-hint { font-size: 11px; color: var(--text3); margin-top: 12px; }
+.fc-counter {
+  font-size: 12px; color: var(--text3); font-family: var(--mono);
+  align-self: flex-end; padding-right: 4px;
+}
+#fc-rating {
+  display: none; flex-direction: row; gap: 10px; width: 100%; max-width: 420px;
+  animation: fadeIn 0.3s ease;
+}
+#fc-rating.visible { display: flex; }
+.rating-btn {
+  flex: 1; padding: 10px 0; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
+  transition: all var(--transition);
+}
+.rating-hard { background: rgba(247,110,110,0.15); color: var(--danger); border: 1px solid rgba(247,110,110,0.3); }
+.rating-ok { background: rgba(155,142,247,0.15); color: var(--accent2); border: 1px solid rgba(155,142,247,0.3); }
+.rating-easy { background: rgba(109,232,196,0.15); color: var(--accent3); border: 1px solid rgba(109,232,196,0.3); }
+.rating-hard:hover { background: rgba(247,110,110,0.25); }
+.rating-ok:hover { background: rgba(155,142,247,0.25); }
+.rating-easy:hover { background: rgba(109,232,196,0.25); }
+#fc-actions { display: flex; gap: 10px; width: 100%; max-width: 420px; }
+.fc-action-btn {
+  flex: 1; padding: 10px; border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text2); font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border); transition: all var(--transition);
+}
+.fc-action-btn:hover { background: var(--surface2); color: var(--text); }
+.srs-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  background: var(--surface3); color: var(--text3); margin-top: 6px;
+}
+.srs-0 { color: var(--danger); } .srs-1 { color: var(--accent); } .srs-2 { color: var(--accent2); }
+.srs-3 { color: var(--accent3); } .srs-4 { color: #4cc9f0; } .srs-5 { color: #f72585; }
+
+/* ── Quiz ── */
+#quiz-container { max-width: 500px; margin: 0 auto; }
+#quiz-question-card {
+  background: var(--surface); border-radius: var(--radius); padding: 28px 24px;
+  margin-bottom: 16px; text-align: center; border: 1px solid var(--border);
+}
+#quiz-word { font-family: var(--serif); font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+#quiz-phonetic { font-family: var(--mono); font-size: 13px; color: var(--text3); }
+#quiz-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.quiz-choice {
+  padding: 14px 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  transition: all var(--transition); text-align: center;
+}
+.quiz-choice:hover:not(:disabled) { background: var(--surface2); border-color: var(--accent2); }
+.quiz-choice.correct { background: rgba(109,232,196,0.2) !important; border-color: var(--accent3) !important; color: var(--accent3) !important; }
+.quiz-choice.wrong { background: rgba(247,110,110,0.2) !important; border-color: var(--danger) !important; color: var(--danger) !important; }
+#quiz-feedback {
+  text-align: center; padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: 14px; margin-bottom: 12px; display: none;
+  animation: fadeIn 0.2s ease;
+}
+#quiz-feedback.show { display: block; }
+.feedback-correct { background: rgba(109,232,196,0.1); color: var(--accent3); border: 1px solid rgba(109,232,196,0.2); }
+.feedback-wrong { background: rgba(247,110,110,0.1); color: var(--danger); border: 1px solid rgba(247,110,110,0.2); }
+#quiz-next-btn {
+  width: 100%; padding: 13px; border-radius: var(--radius-sm);
+  background: var(--accent2); color: #fff; font-size: 14px; font-weight: 600;
+  transition: all var(--transition); display: none;
+}
+#quiz-next-btn.show { display: block; }
+#quiz-next-btn:hover { filter: brightness(1.1); }
+#quiz-score { 
+  display: flex; gap: 16px; margin-bottom: 16px;
+  font-size: 12px; font-weight: 500; color: var(--text3);
+}
+.quiz-stat { display: flex; align-items: center; gap: 5px; }
+.quiz-stat .dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-correct { background: var(--accent3); }
+.dot-wrong { background: var(--danger); }
+
+/* ── Reading ── */
+#reading-container { max-width: 600px; margin: 0 auto; }
+.news-item {
+  background: var(--surface); border-radius: var(--radius); padding: 16px;
+  margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer;
+  transition: all var(--transition);
+}
+.news-item:hover { border-color: var(--accent2); background: var(--surface2); }
+.news-date { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 6px; }
+.news-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 6px; }
+.news-preview { font-size: 13px; color: var(--text2); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-expanded { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.news-expanded.open { display: block; }
+.news-body { font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 12px; }
+.news-actions { display: flex; gap: 8px; }
+.news-btn {
+  padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500;
+  background: var(--surface2); color: var(--text2); border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.news-btn:hover { background: var(--surface3); color: var(--text); }
+.note-area {
+  width: 100%; margin-top: 10px; padding: 10px 12px; background: var(--surface3);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: 13px; line-height: 1.6; resize: vertical; min-height: 80px;
+}
+.add-from-note-btn {
+  width: 100%; margin-top: 8px; padding: 9px; border-radius: var(--radius-sm);
+  background: var(--surface3); color: var(--text2); font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border); transition: all var(--transition); cursor: pointer;
+}
+.add-from-note-btn:hover { background: rgba(155,142,247,0.15); color: var(--accent2); border-color: var(--accent2); }
+.note-area::placeholder { color: var(--text3); }
+/* ── Source Selector ── */
+.reading-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; gap: 8px;
+}
+.reading-header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.refresh-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all var(--transition); flex-shrink: 0;
+}
+.refresh-btn:hover { background: var(--surface2); }
+.refresh-btn:disabled { opacity: 0.5; }
+.hide-translated-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all var(--transition); flex-shrink: 0;
+}
+.hide-translated-btn.active { background: var(--accent2); border-color: var(--accent2); }
+.read-original-btn {
+  display: block; width: 100%; padding: 10px 16px; margin: 12px 0 8px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  color: #fff; font-size: 13px; font-weight: 600; text-align: center;
+  border-radius: var(--radius-sm); text-decoration: none;
+  transition: filter var(--transition);
+}
+.read-original-btn:hover { filter: brightness(1.1); }
+.news-translated { opacity: 0.4; }
+.news-translated.hidden-translated { display: none; }
+
+.news-loading { text-align: center; padding: 24px; color: var(--text3); font-size: 14px; }
+
+/* ── Vocab Library ── */
+#vocab-container { max-width: 600px; margin: 0 auto; }
+.vocab-search-wrap { position: relative; margin-bottom: 14px; }
+.vocab-search {
+  width: 100%; padding: 10px 16px 10px 40px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: 14px;
+}
+.vocab-search::placeholder { color: var(--text3); }
+.search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text3); font-size: 16px; pointer-events: none;
+}
+.vocab-actions-bar { display: flex; gap: 8px; margin-bottom: 14px; }
+.add-word-btn {
+  padding: 8px 14px; border-radius: var(--radius-sm); background: var(--accent2);
+  color: #fff; font-size: 13px; font-weight: 600; transition: all var(--transition);
+}
+.add-word-btn:hover { filter: brightness(1.1); }
+#vocab-list { display: flex; flex-direction: column; gap: 6px; }
+.vocab-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 14px;
+  border: 1px solid var(--border); transition: all var(--transition);
+}
+.vocab-item:hover { border-color: var(--surface3); background: var(--surface2); }
+.vocab-word { font-family: var(--serif); font-size: 16px; font-weight: 700; }
+.vocab-phonetic { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+.vocab-meaning { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.vocab-srs-bar {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.vocab-srs-pips { display: flex; gap: 3px; }
+.vocab-srs-pip {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--surface3);
+  transition: background 0.3s;
+}
+.vocab-srs-pip.filled-0 { background: var(--danger); }
+.vocab-srs-pip.filled-1 { background: var(--accent); }
+.vocab-srs-pip.filled-2 { background: var(--accent2); }
+.vocab-srs-pip.filled-3 { background: var(--accent3); }
+.vocab-srs-pip.filled-4 { background: #4cc9f0; }
+.vocab-srs-pip.filled-5 { background: #f72585; }
+.vocab-srs-label { font-size: 9px; color: var(--text3); font-family: var(--mono); white-space: nowrap; }
+.vocab-actions {
+  display: flex; flex-direction: column; gap: 3px;
+  opacity: 0; transition: opacity var(--transition);
+}
+.vocab-item:hover .vocab-actions { opacity: 1; }
+.vocab-action-btn {
+  width: 26px; height: 26px; border-radius: 6px; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface3); color: var(--text2); transition: all var(--transition);
+  cursor: pointer; border: none;
+}
+.vocab-action-btn:hover { background: var(--surface2); color: var(--text); }
+.vocab-action-btn.speak:hover { color: var(--accent3); }
+.vocab-action-btn.edit:hover { color: var(--accent2); }
+.vocab-action-btn.del:hover { color: var(--danger); }
+#vocab-count { font-size: 12px; color: var(--text3); margin-bottom: 10px; font-family: var(--mono); }
+
+/* ── Add Word Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 100; opacity: 0; pointer-events: none; transition: opacity var(--transition);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface); border-radius: var(--radius) var(--radius) 0 0;
+  padding: 24px 20px 32px; width: 100%; max-width: 500px;
+  transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input {
+  width: 100%; padding: 10px 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: 14px; transition: border-color var(--transition);
+}
+.form-input:focus { border-color: var(--accent2); }
+.form-input::placeholder { color: var(--text3); }
+.form-actions { display: flex; gap: 10px; margin-top: 18px; }
+.btn-primary {
+  flex: 1; padding: 12px; border-radius: var(--radius-sm);
+  background: var(--accent2); color: #fff; font-size: 14px; font-weight: 600;
+  transition: all var(--transition);
+}
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-secondary {
+  flex: 1; padding: 12px; border-radius: var(--radius-sm);
+  background: var(--surface2); color: var(--text2); font-size: 14px; font-weight: 500;
+  border: 1px solid var(--border); transition: all var(--transition);
+}
+.btn-secondary:hover { background: var(--surface3); }
+
+/* ── Progress ── */
+#progress-container { max-width: 500px; margin: 0 auto; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 16px;
+  border: 1px solid var(--border); text-align: center;
+}
+.stat-value { font-size: 28px; font-weight: 700; font-family: var(--mono); margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.srs-chart { background: var(--surface); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.srs-chart-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 14px; }
+.srs-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.srs-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.srs-bar { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 2px; }
+.srs-bar-label { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.srs-bar-count { font-size: 11px; color: var(--text2); font-weight: 600; }
+.progress-section-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.data-actions { display: flex; flex-direction: column; gap: 8px; }
+.data-btn {
+  padding: 11px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+  background: var(--surface); color: var(--text2); border: 1px solid var(--border);
+  text-align: left; transition: all var(--transition);
+}
+.data-btn:hover { background: var(--surface2); color: var(--text); }
+.data-btn.danger { color: var(--danger); border-color: rgba(247,110,110,0.3); }
+.data-btn.danger:hover { background: rgba(247,110,110,0.1); }
+.goal-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.goal-label { font-size: 13px; color: var(--text2); flex: 1; }
+.goal-progress-track { flex: 2; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.goal-progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent2), var(--accent3)); transition: width 0.5s ease; }
+.goal-count { font-size: 12px; color: var(--text3); font-family: var(--mono); flex: 0 0 auto; }
+.review-due { 
+  background: linear-gradient(135deg, rgba(155,142,247,0.15), rgba(109,232,196,0.15));
+  border: 1px solid rgba(155,142,247,0.3); border-radius: var(--radius-sm);
+  padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.review-due-icon { font-size: 20px; }
+.review-due-text { flex: 1; font-size: 13px; color: var(--text2); }
+.review-due-count { font-size: 20px; font-weight: 700; color: var(--accent2); font-family: var(--mono); }
+
+/* ── Splash Screen ── */
+#splash {
+  position: fixed; inset: 0; z-index: 999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#splash.hide {
+  opacity: 0; pointer-events: none; transform: scale(1.04);
+}
+#splash-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  animation: splashIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes splashIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+#splash-logo {
+  width: 80px; height: 80px; border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 44px; font-weight: 700; color: #fff;
+  box-shadow: 0 12px 40px rgba(155,142,247,0.4);
+}
+#splash-title {
+  font-family: var(--serif); font-size: 26px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+#splash-sub { font-size: 13px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+
+
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--surface3); color: var(--text); padding: 10px 18px; border-radius: 24px;
+  font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 200;
+  transition: all 0.3s ease; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Streak modal ── */
+#streak-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300;
+  display: none; align-items: center; justify-content: center; flex-direction: column;
+}
+#streak-modal.open { display: flex; animation: fadeIn 0.4s ease; }
+.streak-content { text-align: center; position: relative; z-index: 1; }
+.streak-emoji { font-size: 80px; display: block; margin-bottom: 16px; animation: bounceIn 0.6s ease; }
+.streak-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.streak-sub { font-size: 16px; color: var(--text2); margin-bottom: 28px; }
+.streak-close {
+  padding: 12px 32px; border-radius: 24px; background: var(--accent2); color: #fff;
+  font-size: 15px; font-weight: 600;
+}
+#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+/* ── Install banner ── */
+#install-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 16px; display: none;
+  animation: slideUp 0.4s ease;
+}
+#install-banner.show { display: block; }
+.install-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.install-steps { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 12px; }
+.install-close {
+  position: absolute; top: 12px; right: 14px; color: var(--text3); font-size: 20px;
+}
+#notify-modal .modal { border-radius: var(--radius); max-width: 340px; margin: 20px; }
+#notify-modal .modal { align-self: center; }
+#notify-modal { align-items: center; }
+
+/* ── Animations ── */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.fc-card-wrap { animation: float 4s ease-in-out infinite; }
+.fade-out { opacity: 0 !important; transition: opacity 0.2s ease !important; }
+.fade-in { animation: fadeIn 0.3s ease; }
+
+/* ── Notes tab sub-mode ── */
+.note-list-item {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 0;
+  margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden;
+}
+.note-list-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; cursor: pointer; gap: 8px;
+  transition: background var(--transition);
+}
+.note-list-header:hover { background: var(--surface2); }
+.note-list-title { font-size: 13px; font-weight: 600; flex: 1; line-height: 1.4; }
+.note-expand-arrow {
+  font-size: 18px; color: var(--text3); transition: transform 0.2s ease; flex-shrink: 0;
+}
+.note-list-item.open .note-expand-arrow { transform: rotate(90deg); }
+.note-list-body {
+  display: none; padding: 0 14px 14px; border-top: 1px solid var(--border);
+}
+.note-list-item.open .note-list-body { display: block; }
+.note-orig-label {
+  font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.8px; margin: 12px 0 6px;
+}
+.note-orig-text {
+  font-size: 13px; color: var(--text2); line-height: 1.7;
+  padding: 10px 12px; background: var(--surface2); border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent2);
+}
+.note-list-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <div id="splash-inner">
+    <div id="splash-logo">W</div>
+    <div id="splash-title">Word Deck</div>
+    <div id="splash-sub">English Vocabulary</div>
+  </div>
+</div>
+
+<!-- Header -->
+<div id="header">
+  <span id="app-title">Word Deck</span>
+  <div class="header-actions">
+    <button class="icon-btn" id="notify-btn" title="Study Reminder">🔔</button>
+    <button class="icon-btn" id="theme-btn" title="Toggle Theme">🌙</button>
+    <div id="streak-badge">🔥 <span id="streak-count">0</span></div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div id="tabs">
+  <button class="tab-btn active" data-tab="flashcard">
+    <span class="tab-icon">🃏</span>Flashcard
+  </button>
+  <button class="tab-btn" data-tab="quiz">
+    <span class="tab-icon">✏️</span>Quiz
+  </button>
+  <button class="tab-btn" data-tab="reading">
+    <span class="tab-icon">📰</span>Reading
+  </button>
+  <button class="tab-btn" data-tab="vocab">
+    <span class="tab-icon">📚</span>Words
+  </button>
+  <button class="tab-btn" data-tab="progress">
+    <span class="tab-icon">📊</span>Progress
+  </button>
+</div>
+
+<!-- Main -->
+<div id="main">
+
+  <!-- Flashcard Tab -->
+  <div id="tab-flashcard" class="tab-panel active">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="fc-mode-en">🇬🇧 English → 中文</button>
+      <button class="mode-btn" id="fc-mode-zh">🀄 中文 → English</button>
+    </div>
+    <div id="fc-container">
+      <div class="fc-counter"><span id="fc-idx">1</span> / <span id="fc-total">0</span></div>
+      <div id="fc-card-wrap" class="fc-card-wrap" onclick="fcFlip()">
+        <div id="fc-card">
+          <div class="fc-face fc-front">
+            <div class="fc-word" id="fc-front-word">—</div>
+            <div class="fc-phonetic" id="fc-front-phonetic"></div>
+            <div class="fc-pos" id="fc-front-pos"></div>
+            <div class="fc-hint">Tap to reveal</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-meaning" id="fc-back-meaning">—</div>
+            <div class="fc-example" id="fc-back-example"></div>
+            <div class="srs-badge" id="fc-srs-badge">SRS 0</div>
+          </div>
+        </div>
+      </div>
+      <div id="fc-rating">
+        <button class="rating-btn rating-hard" onclick="fcRate('hard')">😓 Hard</button>
+        <button class="rating-btn rating-ok" onclick="fcRate('ok')">🙂 OK</button>
+        <button class="rating-btn rating-easy" onclick="fcRate('easy')">😎 Easy</button>
+      </div>
+      <div id="fc-actions">
+        <button class="fc-action-btn" onclick="fcSpeak()">🔊 Listen</button>
+        <button class="fc-action-btn" onclick="fcSkip()">⏭ Skip</button>
+        <button class="fc-action-btn" onclick="fcShuffle()">🔀 Shuffle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Tab -->
+  <div id="tab-quiz" class="tab-panel">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="quiz-mode-meaning">English → 中文</button>
+      <button class="mode-btn" id="quiz-mode-word">中文 → English</button>
+    </div>
+    <div id="quiz-container">
+      <div id="quiz-score">
+        <div class="quiz-stat"><div class="dot dot-correct"></div><span id="quiz-correct">0</span> correct</div>
+        <div class="quiz-stat"><div class="dot dot-wrong"></div><span id="quiz-wrong">0</span> wrong</div>
+        <div class="quiz-stat">Session: <span id="quiz-session">0</span></div>
+      </div>
+      <div id="quiz-question-card">
+        <div id="quiz-word">—</div>
+        <div id="quiz-phonetic"></div>
+      </div>
+      <div id="quiz-choices">
+        <button class="quiz-choice" onclick="quizAnswer(0)"></button>
+        <button class="quiz-choice" onclick="quizAnswer(1)"></button>
+        <button class="quiz-choice" onclick="quizAnswer(2)"></button>
+        <button class="quiz-choice" onclick="quizAnswer(3)"></button>
+      </div>
+      <div id="quiz-feedback"></div>
+      <button id="quiz-next-btn" onclick="quizNext()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Reading Tab -->
+  <div id="tab-reading" class="tab-panel">
+    <div id="reading-container">
+      <div class="reading-header">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);">The Guardian</div>
+        <div class="reading-header-actions">
+          <button class="hide-translated-btn" id="hide-translated-btn" onclick="toggleHideTranslated()" title="Hide noted articles">👁</button>
+          <button class="refresh-btn" id="news-load-btn" onclick="loadNews()" title="Refresh">🔄</button>
+        </div>
+      </div>
+      <div id="news-list">
+        <div class="empty-state"><div class="empty-icon">📰</div>Loading articles…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vocab Tab -->
+  <div id="tab-vocab" class="tab-panel">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="vocab-mode-list">📋 Word List</button>
+      <button class="mode-btn" id="vocab-mode-notes">📝 Notes</button>
+    </div>
+    <div id="vocab-container">
+      <div class="vocab-search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="vocab-search" id="vocab-search" placeholder="Search words…" oninput="renderVocab()">
+      </div>
+      <div class="vocab-actions-bar">
+        <button class="add-word-btn" onclick="openAddModal()">＋ Add Word</button>
+        <button class="add-word-btn" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);" onclick="importCSV()">⬆ Import</button>
+      </div>
+      <div id="vocab-count"></div>
+      <div id="vocab-list"></div>
+      <div id="notes-list" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Progress Tab -->
+  <div id="tab-progress" class="tab-panel">
+    <div id="progress-container">
+      <div id="due-banner" class="review-due">
+        <span class="review-due-icon">⏰</span>
+        <span class="review-due-text">Words due for review</span>
+        <span class="review-due-count" id="due-count">0</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total" style="color:var(--accent2)">0</div>
+          <div class="stat-label">Total Words</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak" style="color:var(--accent)">0</div>
+          <div class="stat-label">Day Streak 🔥</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-reviewed" style="color:var(--accent3)">0</div>
+          <div class="stat-label">Total Reviews</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-mastered" style="color:#4cc9f0">0</div>
+          <div class="stat-label">Mastered (SRS 5)</div>
+        </div>
+      </div>
+      <div class="goal-row">
+        <span class="goal-label">Today's goal (10 reviews)</span>
+        <div class="goal-progress-track">
+          <div class="goal-progress-fill" id="goal-fill" style="width:0%"></div>
+        </div>
+        <span class="goal-count" id="goal-count">0/10</span>
+      </div>
+      <div class="srs-chart">
+        <div class="srs-chart-title">SRS Distribution</div>
+        <div class="srs-bars" id="srs-bars"></div>
+      </div>
+      <div class="progress-section-title">Data Management</div>
+      <div class="data-actions">
+        <button class="data-btn" onclick="exportData()">⬇ Export Vocabulary (JSON)</button>
+        <button class="data-btn" onclick="exportCSV()">📄 Export CSV</button>
+        <button class="data-btn danger" onclick="confirmReset()">🗑 Reset All Progress</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Add Word Modal -->
+<div class="modal-overlay" id="add-modal" onclick="closeModalOutside(event,'add-modal')">
+  <div class="modal">
+    <div class="modal-title">Add New Word</div>
+    <div class="form-group">
+      <label class="form-label">Word *</label>
+      <input class="form-input" id="f-word" placeholder="e.g. persevere">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phonetic</label>
+      <input class="form-input" id="f-phonetic" placeholder="e.g. /pəːsɪˈvɪə/">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Part of Speech</label>
+      <input class="form-input" id="f-pos" placeholder="e.g. v. / n. / adj.">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Chinese Meaning *</label>
+      <input class="form-input" id="f-meaning" placeholder="e.g. 堅持，不屈不撓">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Example (English — Chinese)</label>
+      <input class="form-input" id="f-example" placeholder="She persevered through hardship. — 她堅持度過了困境。">
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('add-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveWord()">Save Word</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notify Modal -->
+<div class="modal-overlay" id="notify-modal" onclick="closeModalOutside(event,'notify-modal')">
+  <div class="modal" style="border-radius:var(--radius);max-width:340px;margin:20px auto;">
+    <div class="modal-title">Study Reminder</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;">
+      Notifications require the page to stay open. Set a daily reminder to keep your streak going!
+    </p>
+    <div class="form-group">
+      <label class="form-label">Reminder Time</label>
+      <input class="form-input" type="time" id="notify-time" value="20:00">
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('notify-modal')">Cancel</button>
+      <button class="btn-primary" onclick="saveNotify()">Set Reminder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Streak Modal -->
+<div id="streak-modal">
+  <canvas id="particles"></canvas>
+  <div class="streak-content">
+    <span class="streak-emoji">🔥</span>
+    <div class="streak-title" id="streak-modal-title">Streak Achieved!</div>
+    <div class="streak-sub" id="streak-modal-sub"></div>
+    <button class="streak-close" onclick="closeStreakModal()">Keep it up! 💪</button>
+  </div>
+</div>
+
+<!-- Install Banner -->
+<div id="install-banner">
+  <button class="install-close" onclick="document.getElementById('install-banner').classList.remove('show')">×</button>
+  <div class="install-title">Add to Home Screen</div>
+  <div class="install-steps" id="install-steps"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<input type="file" id="csv-import-input" accept=".csv,.json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ══════════════════════════════════════
+//  DEFAULT VOCABULARY (N5–N3 equivalent: 120 English words)
+// ══════════════════════════════════════
+const DEFAULT_VOCAB = [
+  {id:1,kanji:"persevere",hira:"/pəːsɪˈvɪə/",pos:"v.",meaning:"堅持，不屈不撓",example:"She persevered through every hardship. — 她堅持度過了每一次困境。",srs:0,nextReview:0,correct:0,total:0},
+  {id:2,kanji:"eloquent",hira:"/ˈɛləkwənt/",pos:"adj.",meaning:"口才好的，雄辯的",example:"The speaker was remarkably eloquent. — 那位演講者口才極好。",srs:0,nextReview:0,correct:0,total:0},
+  {id:3,kanji:"ambiguous",hira:"/æmˈbɪɡjuəs/",pos:"adj.",meaning:"模糊的，不明確的",example:"His instructions were ambiguous. — 他的指示很模糊。",srs:0,nextReview:0,correct:0,total:0},
+  {id:4,kanji:"flourish",hira:"/ˈflʌrɪʃ/",pos:"v.",meaning:"繁榮，茁壯成長",example:"The business began to flourish. — 這家公司開始蓬勃發展。",srs:0,nextReview:0,correct:0,total:0},
+  {id:5,kanji:"meticulous",hira:"/mɪˈtɪkjʊləs/",pos:"adj.",meaning:"一絲不苟的，極其細心的",example:"He was meticulous about details. — 他對細節一絲不苟。",srs:0,nextReview:0,correct:0,total:0},
+  {id:6,kanji:"benevolent",hira:"/bɪˈnɛvələnt/",pos:"adj.",meaning:"仁慈的，善意的",example:"She was a benevolent leader. — 她是一位仁慈的領導者。",srs:0,nextReview:0,correct:0,total:0},
+  {id:7,kanji:"candid",hira:"/ˈkændɪd/",pos:"adj.",meaning:"坦率的，直接的",example:"Please give me your candid opinion. — 請告訴我你坦率的意見。",srs:0,nextReview:0,correct:0,total:0},
+  {id:8,kanji:"decipher",hira:"/dɪˈsaɪfə/",pos:"v.",meaning:"解讀，破譯",example:"She tried to decipher his handwriting. — 她試圖辨認他的筆跡。",srs:0,nextReview:0,correct:0,total:0},
+  {id:9,kanji:"empathy",hira:"/ˈɛmpəθi/",pos:"n.",meaning:"同理心，感同身受",example:"Empathy is key to good relationships. — 同理心是良好關係的關鍵。",srs:0,nextReview:0,correct:0,total:0},
+  {id:10,kanji:"frugal",hira:"/ˈfruːɡ(ə)l/",pos:"adj.",meaning:"節儉的，樸素的",example:"He lived a frugal but happy life. — 他過著節儉卻快樂的生活。",srs:0,nextReview:0,correct:0,total:0},
+  {id:11,kanji:"gregarious",hira:"/ɡrɪˈɡɛːrɪəs/",pos:"adj.",meaning:"外向的，喜歡社交的",example:"She's naturally gregarious at parties. — 她在派對上天生外向。",srs:0,nextReview:0,correct:0,total:0},
+  {id:12,kanji:"hinder",hira:"/ˈhɪndə/",pos:"v.",meaning:"阻礙，妨礙",example:"Bad weather hindered our progress. — 惡劣天氣阻礙了我們的進度。",srs:0,nextReview:0,correct:0,total:0},
+  {id:13,kanji:"immerse",hira:"/ɪˈməːs/",pos:"v.",meaning:"沉浸，使深陷其中",example:"He immersed himself in the culture. — 他沉浸在那個文化中。",srs:0,nextReview:0,correct:0,total:0},
+  {id:14,kanji:"jubilant",hira:"/ˈdʒuːbɪl(ə)nt/",pos:"adj.",meaning:"歡欣鼓舞的，喜悅的",example:"The crowd was jubilant after the win. — 人群在勝利後歡欣鼓舞。",srs:0,nextReview:0,correct:0,total:0},
+  {id:15,kanji:"keen",hira:"/kiːn/",pos:"adj.",meaning:"熱切的；敏銳的",example:"She has a keen eye for design. — 她對設計有敏銳的眼光。",srs:0,nextReview:0,correct:0,total:0},
+  {id:16,kanji:"languid",hira:"/ˈlæŋɡwɪd/",pos:"adj.",meaning:"慵懶的，無精打采的",example:"She felt languid in the summer heat. — 她在夏日酷暑中感到慵懶。",srs:0,nextReview:0,correct:0,total:0},
+  {id:17,kanji:"mitigate",hira:"/ˈmɪtɪɡeɪt/",pos:"v.",meaning:"減輕，緩和",example:"Exercise can mitigate stress. — 運動可以緩解壓力。",srs:0,nextReview:0,correct:0,total:0},
+  {id:18,kanji:"nuance",hira:"/ˈnjuːɑːns/",pos:"n.",meaning:"細微差別，微妙之處",example:"The poem is full of emotional nuance. — 這首詩充滿情感的細微差別。",srs:0,nextReview:0,correct:0,total:0},
+  {id:19,kanji:"obscure",hira:"/əbˈskjʊə/",pos:"adj.",meaning:"晦澀的；不知名的",example:"He quoted an obscure philosopher. — 他引用了一位不知名的哲學家。",srs:0,nextReview:0,correct:0,total:0},
+  {id:20,kanji:"pragmatic",hira:"/præɡˈmætɪk/",pos:"adj.",meaning:"務實的，注重實際的",example:"We need a pragmatic approach. — 我們需要務實的方法。",srs:0,nextReview:0,correct:0,total:0},
+  {id:21,kanji:"quench",hira:"/kwɛn(t)ʃ/",pos:"v.",meaning:"解渴；平息（慾望）",example:"Nothing could quench his thirst for knowledge. — 沒有什麼能平息他對知識的渴望。",srs:0,nextReview:0,correct:0,total:0},
+  {id:22,kanji:"resilient",hira:"/rɪˈzɪlɪənt/",pos:"adj.",meaning:"有韌性的，快速恢復的",example:"Children are often remarkably resilient. — 孩子們通常有驚人的韌性。",srs:0,nextReview:0,correct:0,total:0},
+  {id:23,kanji:"serene",hira:"/sɪˈriːn/",pos:"adj.",meaning:"平靜的，安詳的",example:"The lake looked serene at dawn. — 湖泊在黎明時顯得平靜。",srs:0,nextReview:0,correct:0,total:0},
+  {id:24,kanji:"tenacious",hira:"/tɪˈneɪʃəs/",pos:"adj.",meaning:"頑強的，堅韌不拔的",example:"She was tenacious in pursuing her goal. — 她堅韌地追求自己的目標。",srs:0,nextReview:0,correct:0,total:0},
+  {id:25,kanji:"ubiquitous",hira:"/juːˈbɪkwɪtəs/",pos:"adj.",meaning:"到處存在的，無所不在的",example:"Smartphones are now ubiquitous. — 智慧型手機現在無所不在。",srs:0,nextReview:0,correct:0,total:0},
+  {id:26,kanji:"versatile",hira:"/ˈvəːsətaɪl/",pos:"adj.",meaning:"多才多藝的；多功能的",example:"She is a versatile actress. — 她是一位多才多藝的女演員。",srs:0,nextReview:0,correct:0,total:0},
+  {id:27,kanji:"wistful",hira:"/ˈwɪs(t)f(ə)l/",pos:"adj.",meaning:"渴望的；帶憂傷的",example:"He gave a wistful smile. — 他帶著憂傷地微笑。",srs:0,nextReview:0,correct:0,total:0},
+  {id:28,kanji:"xenophobia",hira:"/ˌzɛnəˈfəʊbɪə/",pos:"n.",meaning:"排外心理，仇外情緒",example:"Xenophobia harms society. — 排外情緒傷害社會。",srs:0,nextReview:0,correct:0,total:0},
+  {id:29,kanji:"yearn",hira:"/jəːn/",pos:"v.",meaning:"渴望，深切盼望",example:"She yearned for a simpler life. — 她渴望更簡單的生活。",srs:0,nextReview:0,correct:0,total:0},
+  {id:30,kanji:"zealous",hira:"/ˈzɛləs/",pos:"adj.",meaning:"熱忱的，積極的",example:"He was a zealous advocate for change. — 他是變革的熱忱倡導者。",srs:0,nextReview:0,correct:0,total:0},
+  {id:31,kanji:"abdicate",hira:"/ˈabdɪkeɪt/",pos:"v.",meaning:"退位；放棄（責任）",example:"The king chose to abdicate. — 國王選擇退位。",srs:0,nextReview:0,correct:0,total:0},
+  {id:32,kanji:"blatant",hira:"/ˈbleɪt(ə)nt/",pos:"adj.",meaning:"公然的，明目張膽的",example:"It was a blatant lie. — 這是一個公然的謊言。",srs:0,nextReview:0,correct:0,total:0},
+  {id:33,kanji:"cumbersome",hira:"/ˈkʌmbəs(ə)m/",pos:"adj.",meaning:"笨重的，麻煩的",example:"The old software was cumbersome to use. — 舊軟體使用起來很麻煩。",srs:0,nextReview:0,correct:0,total:0},
+  {id:34,kanji:"diligent",hira:"/ˈdɪlɪdʒ(ə)nt/",pos:"adj.",meaning:"勤奮的，用功的",example:"She is a diligent student. — 她是一個勤奮的學生。",srs:0,nextReview:0,correct:0,total:0},
+  {id:35,kanji:"erratic",hira:"/ɪˈratɪk/",pos:"adj.",meaning:"不穩定的，不規律的",example:"His behaviour was erratic. — 他的行為很不穩定。",srs:0,nextReview:0,correct:0,total:0},
+  {id:36,kanji:"fathom",hira:"/ˈfað(ə)m/",pos:"v.",meaning:"理解，弄清楚",example:"I can't fathom why he left. — 我無法理解他為何離開。",srs:0,nextReview:0,correct:0,total:0},
+  {id:37,kanji:"grim",hira:"/ɡrɪm/",pos:"adj.",meaning:"嚴峻的，陰沉的",example:"The situation looks grim. — 情況看起來很嚴峻。",srs:0,nextReview:0,correct:0,total:0},
+  {id:38,kanji:"hamper",hira:"/ˈhampə/",pos:"v.",meaning:"妨礙，阻礙",example:"Rain hampered the rescue effort. — 雨水阻礙了救援工作。",srs:0,nextReview:0,correct:0,total:0},
+  {id:39,kanji:"innate",hira:"/ɪˈneɪt/",pos:"adj.",meaning:"天生的，固有的",example:"She has an innate talent for music. — 她有音樂的天賦。",srs:0,nextReview:0,correct:0,total:0},
+  {id:40,kanji:"jeopardize",hira:"/ˈdʒɛpədaɪz/",pos:"v.",meaning:"危及，使陷入危險",example:"Smoking jeopardizes your health. — 吸菸危害你的健康。",srs:0,nextReview:0,correct:0,total:0},
+  {id:41,kanji:"kindle",hira:"/ˈkɪnd(ə)l/",pos:"v.",meaning:"點燃；激起（情感）",example:"Her words kindled his enthusiasm. — 她的話語激起了他的熱情。",srs:0,nextReview:0,correct:0,total:0},
+  {id:42,kanji:"lament",hira:"/ləˈmɛnt/",pos:"v./n.",meaning:"哀悼，哀歎",example:"He lamented the loss of his friend. — 他為失去朋友而哀痛。",srs:0,nextReview:0,correct:0,total:0},
+  {id:43,kanji:"mundane",hira:"/mʌnˈdeɪn/",pos:"adj.",meaning:"平凡的，世俗的",example:"She was bored by mundane tasks. — 她對平凡的工作感到厭倦。",srs:0,nextReview:0,correct:0,total:0},
+  {id:44,kanji:"nonchalant",hira:"/ˈnɒnʃ(ə)l(ə)nt/",pos:"adj.",meaning:"漫不經心的，若無其事的",example:"He seemed nonchalant about the result. — 他對結果若無其事。",srs:0,nextReview:0,correct:0,total:0},
+  {id:45,kanji:"ominous",hira:"/ˈɒmɪnəs/",pos:"adj.",meaning:"不吉祥的，預兆不好的",example:"Dark clouds looked ominous. — 烏雲看起來不祥。",srs:0,nextReview:0,correct:0,total:0},
+  {id:46,kanji:"plausible",hira:"/ˈplɔːzɪb(ə)l/",pos:"adj.",meaning:"看似合理的，似乎可信的",example:"Her explanation sounds plausible. — 她的解釋聽起來合理。",srs:0,nextReview:0,correct:0,total:0},
+  {id:47,kanji:"quandary",hira:"/ˈkwɒnd(ə)ri/",pos:"n.",meaning:"困境，進退兩難",example:"He was in a real quandary. — 他陷入了真正的困境。",srs:0,nextReview:0,correct:0,total:0},
+  {id:48,kanji:"reticent",hira:"/ˈrɛtɪs(ə)nt/",pos:"adj.",meaning:"沉默寡言的，不輕易表達的",example:"She was reticent about her past. — 她對自己的過去守口如瓶。",srs:0,nextReview:0,correct:0,total:0},
+  {id:49,kanji:"squander",hira:"/ˈskwɒndə/",pos:"v.",meaning:"浪費，揮霍",example:"Don't squander this opportunity. — 不要浪費這個機會。",srs:0,nextReview:0,correct:0,total:0},
+  {id:50,kanji:"turbulent",hira:"/ˈtəːbjʊl(ə)nt/",pos:"adj.",meaning:"動盪的，混亂的",example:"It was a turbulent period in history. — 那是歷史上一段動盪時期。",srs:0,nextReview:0,correct:0,total:0},
+  {id:51,kanji:"unanimous",hira:"/juːˈnanɪməs/",pos:"adj.",meaning:"全體一致的",example:"The decision was unanimous. — 這個決定是全體一致的。",srs:0,nextReview:0,correct:0,total:0},
+  {id:52,kanji:"vague",hira:"/veɪɡ/",pos:"adj.",meaning:"模糊的，不清楚的",example:"His directions were vague. — 他的指示很模糊。",srs:0,nextReview:0,correct:0,total:0},
+  {id:53,kanji:"whimsical",hira:"/ˈwɪmzɪk(ə)l/",pos:"adj.",meaning:"異想天開的，奇特的",example:"She has a whimsical sense of humour. — 她有異想天開的幽默感。",srs:0,nextReview:0,correct:0,total:0},
+  {id:54,kanji:"exasperate",hira:"/ɪɡˈzɑːspəreɪt/",pos:"v.",meaning:"使惱怒，使煩躁",example:"His constant lateness exasperated her. — 他屢次遲到令她大為惱怒。",srs:0,nextReview:0,correct:0,total:0},
+  {id:55,kanji:"yield",hira:"/jiːld/",pos:"v.",meaning:"產生；屈服，讓步",example:"The farm yields plenty of crops. — 農場產出豐收的農作物。",srs:0,nextReview:0,correct:0,total:0},
+  {id:56,kanji:"alleviate",hira:"/əˈliːvɪeɪt/",pos:"v.",meaning:"減輕，緩解",example:"Medicine can alleviate the pain. — 藥物可以緩解疼痛。",srs:0,nextReview:0,correct:0,total:0},
+  {id:57,kanji:"bolster",hira:"/ˈbəʊlstə/",pos:"v.",meaning:"支持，加強",example:"New data bolsters the argument. — 新數據加強了這個論點。",srs:0,nextReview:0,correct:0,total:0},
+  {id:58,kanji:"contemplate",hira:"/ˈkɒntɛmpleɪt/",pos:"v.",meaning:"深思，考慮",example:"She contemplated a career change. — 她深思是否要換工作。",srs:0,nextReview:0,correct:0,total:0},
+  {id:59,kanji:"demure",hira:"/dɪˈmjʊə/",pos:"adj.",meaning:"端莊的，矜持的",example:"She gave a demure smile. — 她端莊地微笑。",srs:0,nextReview:0,correct:0,total:0},
+  {id:60,kanji:"emulate",hira:"/ˈɛmjʊleɪt/",pos:"v.",meaning:"效仿，仿效",example:"He tried to emulate his mentor. — 他試圖效仿他的導師。",srs:0,nextReview:0,correct:0,total:0},
+];
+
+// ══════════════════════════════════════
+//  STATE & STORAGE
+// ══════════════════════════════════════
+const STORAGE_KEY = 'engvocab_v1';
+const SRS_INTERVALS = [0, 1, 3, 7, 14, 30];
+const DEFAULT_MAX_ID = 60;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      // Merge new default words
+      const existingIds = new Set(s.words.map(w => w.id));
+      DEFAULT_VOCAB.forEach(w => { if (!existingIds.has(w.id)) s.words.push({...w}); });
+      return s;
+    }
+  } catch(e) {}
+  return {
+    words: DEFAULT_VOCAB.map(w => ({...w})),
+    streak: 0,
+    lastStudyDate: null,
+    todayReviews: 0,
+    totalReviews: 0,
+    fcMode: 'en',
+    quizMode: 'meaning',
+    readMode: 'easy',
+    vocabMode: 'list',
+    theme: 'dark',
+    notifyTime: null,
+    newsNotes: {},
+    newsCache: { guardian: [] },
+    fcQueueEn: [],
+    fcQueueZh: [],
+    fcIdxEn: 0,
+    fcIdxZh: 0,
+  };
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+let quizState = { correct: 0, wrong: 0, session: 0, answered: false, correctIdx: 0, lastId: null };
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+function init() {
+  // Splash screen — dismiss after 2s
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+  }, 2000);
+
+  applyTheme();
+  checkStreak();
+  initTabs();
+  initFlashcard();
+  renderVocab();
+  renderProgress();
+  updateStreakBadge();
+  quizNew();
+  showInstallBanner();
+
+  // Daily reset check
+  const today = new Date().toDateString();
+  if (state.lastStudyDate !== today) {
+    state.todayReviews = 0;
+  }
+  saveState();
+}
+
+// ══════════════════════════════════════
+//  THEME
+// ══════════════════════════════════════
+function applyTheme() {
+  document.body.classList.toggle('light', state.theme === 'light');
+  document.getElementById('theme-btn').textContent = state.theme === 'light' ? '☀️' : '🌙';
+}
+document.getElementById('theme-btn').onclick = () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); saveState();
+};
+
+// ══════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+      if (tab === 'progress') renderProgress();
+      if (tab === 'reading' && !(state.newsCache[currentSource] || []).length) loadNews();
+    };
+  });
+}
+
+// ══════════════════════════════════════
+//  STREAK
+// ══════════════════════════════════════
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (state.lastStudyDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastStudyDate !== yesterday && state.lastStudyDate !== null) {
+      // Streak broken only if missed a day but keep count
+    }
+  }
+}
+
+function updateStreakBadge() {
+  document.getElementById('streak-count').textContent = state.streak;
+}
+
+function recordReview(correct) {
+  state.totalReviews++;
+  state.todayReviews++;
+  const today = new Date().toDateString();
+  state.lastStudyDate = today;
+
+  if (state.todayReviews === 10) {
+    // Goal achieved!
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    // Increment streak
+    state.streak++;
+    updateStreakBadge();
+    showStreakModal();
+  }
+  renderProgress();
+  saveState();
+}
+
+function showStreakModal() {
+  const modal = document.getElementById('streak-modal');
+  const days = state.streak;
+  document.getElementById('streak-modal-title').textContent = `${days} Day Streak! 🔥`;
+  document.getElementById('streak-modal-sub').textContent = `You reviewed 10 words today. Keep the momentum going!`;
+  modal.classList.add('open');
+  startParticles();
+}
+
+function closeStreakModal() {
+  document.getElementById('streak-modal').classList.remove('open');
+  stopParticles();
+}
+
+let particleInterval = null;
+function startParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const particles = Array.from({length: 60}, () => ({
+    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+    vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3,
+    r: Math.random()*6+2,
+    color: ['#e8a87c','#9b8ef7','#6de8c4','#f76e6e','#4cc9f0'][Math.floor(Math.random()*5)],
+    life: 1
+  }));
+  particleInterval = setInterval(() => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.life -= 0.005;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+    });
+  }, 16);
+}
+function stopParticles() {
+  clearInterval(particleInterval);
+  const ctx = document.getElementById('particles').getContext('2d');
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+}
+
+// ══════════════════════════════════════
+//  FLASHCARD
+// ══════════════════════════════════════
+let fcMode = 'en'; // 'en' or 'zh'
+let fcFlipped = false;
+
+function buildFcQueue(mode) {
+  const now = Date.now();
+  const due = state.words.filter(w => w.nextReview <= now);
+  const notDue = state.words.filter(w => w.nextReview > now);
+  const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+  return [...shuffle(due), ...shuffle(notDue)].map(w => w.id);
+}
+
+function initFlashcard() {
+  document.getElementById('fc-mode-en').onclick = () => setFcMode('en');
+  document.getElementById('fc-mode-zh').onclick = () => setFcMode('zh');
+
+  if (!state.fcQueueEn.length) state.fcQueueEn = buildFcQueue('en');
+  if (!state.fcQueueZh.length) state.fcQueueZh = buildFcQueue('zh');
+  renderFcCard();
+}
+
+function setFcMode(mode) {
+  fcMode = mode;
+  state.fcMode = mode;
+  document.getElementById('fc-mode-en').classList.toggle('active', mode === 'en');
+  document.getElementById('fc-mode-zh').classList.toggle('active', mode === 'zh');
+  fcFlipped = false;
+  const card = document.getElementById('fc-card');
+  card.classList.remove('flipped');
+  document.getElementById('fc-rating').classList.remove('visible');
+  renderFcCard();
+  saveState();
+}
+
+function getCurrentWord() {
+  const queue = fcMode === 'en' ? state.fcQueueEn : state.fcQueueZh;
+  const idx = fcMode === 'en' ? state.fcIdxEn : state.fcIdxZh;
+  const id = queue[idx % queue.length];
+  return state.words.find(w => w.id === id) || state.words[0];
+}
+
+function renderFcCard() {
+  const w = getCurrentWord();
+  if (!w) return;
+  const queue = fcMode === 'en' ? state.fcQueueEn : state.fcQueueZh;
+  const idx = fcMode === 'en' ? state.fcIdxEn : state.fcIdxZh;
+
+  document.getElementById('fc-idx').textContent = (idx % queue.length) + 1;
+  document.getElementById('fc-total').textContent = queue.length;
+
+  const showPhonetic = w.srs < 4;
+
+  if (fcMode === 'en') {
+    document.getElementById('fc-front-word').textContent = w.kanji;
+    document.getElementById('fc-front-phonetic').textContent = showPhonetic ? (w.hira || '') : '';
+    document.getElementById('fc-front-pos').textContent = w.pos || '';
+    document.getElementById('fc-back-meaning').textContent = w.meaning;
+  } else {
+    document.getElementById('fc-front-word').textContent = w.meaning;
+    document.getElementById('fc-front-phonetic').textContent = '';
+    document.getElementById('fc-front-pos').textContent = '';
+    document.getElementById('fc-back-meaning').textContent = w.kanji;
+  }
+
+  // Example with word highlighted
+  let ex = w.example || '';
+  if (ex && fcMode === 'en') {
+    const re = new RegExp(`(${w.kanji})`, 'i');
+    ex = ex.replace(re, '<em>$1</em>');
+  }
+  document.getElementById('fc-back-example').innerHTML = ex;
+
+  const badge = document.getElementById('fc-srs-badge');
+  badge.textContent = `SRS ${w.srs}`;
+  badge.className = `srs-badge srs-${w.srs}`;
+}
+
+function fcFlip() {
+  const card = document.getElementById('fc-card');
+  fcFlipped = !fcFlipped;
+  card.classList.toggle('flipped', fcFlipped);
+  if (fcFlipped) {
+    document.getElementById('fc-rating').classList.add('visible');
+  }
+}
+
+function fcRate(rating) {
+  const w = getCurrentWord();
+  if (!w) return;
+
+  const now = Date.now();
+  if (rating === 'hard') w.srs = Math.max(0, w.srs - 1);
+  else if (rating === 'ok') w.srs = Math.min(5, w.srs + 1);
+  else w.srs = Math.min(5, w.srs + 2);
+
+  w.nextReview = now + SRS_INTERVALS[w.srs] * 86400000;
+  w.total++;
+  if (rating !== 'hard') w.correct++;
+
+  recordReview(rating !== 'hard');
+  saveState();
+
+  // Advance queue
+  const card = document.getElementById('fc-card');
+  card.classList.add('fade-out');
+  setTimeout(() => {
+    if (fcMode === 'en') state.fcIdxEn = (state.fcIdxEn + 1) % state.fcQueueEn.length;
+    else state.fcIdxZh = (state.fcIdxZh + 1) % state.fcQueueZh.length;
+    fcFlipped = false;
+    card.classList.remove('flipped', 'fade-out');
+    document.getElementById('fc-rating').classList.remove('visible');
+    renderFcCard();
+    card.classList.add('fade-in');
+    setTimeout(() => card.classList.remove('fade-in'), 300);
+    saveState();
+  }, 200);
+}
+
+function fcSkip() {
+  const card = document.getElementById('fc-card');
+  card.classList.add('fade-out');
+  setTimeout(() => {
+    if (fcMode === 'en') state.fcIdxEn = (state.fcIdxEn + 1) % state.fcQueueEn.length;
+    else state.fcIdxZh = (state.fcIdxZh + 1) % state.fcQueueZh.length;
+    fcFlipped = false;
+    card.classList.remove('flipped', 'fade-out');
+    document.getElementById('fc-rating').classList.remove('visible');
+    renderFcCard();
+    saveState();
+  }, 200);
+}
+
+function fcShuffle() {
+  if (fcMode === 'en') { state.fcQueueEn = buildFcQueue('en'); state.fcIdxEn = 0; }
+  else { state.fcQueueZh = buildFcQueue('zh'); state.fcIdxZh = 0; }
+  fcFlipped = false;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-rating').classList.remove('visible');
+  renderFcCard();
+  showToast('Queue shuffled!');
+  saveState();
+}
+
+function fcSpeak() {
+  const w = getCurrentWord();
+  if (!w) return;
+  const text = fcFlipped && fcMode === 'en' ? w.meaning : w.kanji;
+  speakText(w.kanji);
+}
+
+function speakText(text) {
+  if (!window.speechSynthesis) return showToast('Speech not supported');
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US';
+  window.speechSynthesis.speak(utt);
+}
+
+// ══════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════
+let quizMode = 'meaning';
+
+document.getElementById('quiz-mode-meaning').onclick = () => setQuizMode('meaning');
+document.getElementById('quiz-mode-word').onclick = () => setQuizMode('word');
+
+function setQuizMode(mode) {
+  quizMode = mode;
+  document.getElementById('quiz-mode-meaning').classList.toggle('active', mode === 'meaning');
+  document.getElementById('quiz-mode-word').classList.toggle('active', mode === 'word');
+  quizNew();
+}
+
+function getWeightedWord() {
+  const weights = state.words.map(w => Math.max(1, 6 - w.srs));
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < state.words.length; i++) {
+    r -= weights[i];
+    if (r <= 0 && state.words[i].id !== quizState.lastId) return state.words[i];
+  }
+  return state.words[Math.floor(Math.random() * state.words.length)];
+}
+
+function quizNew() {
+  const correct = getWeightedWord();
+  quizState.lastId = correct.id;
+  quizState.answered = false;
+
+  const others = state.words.filter(w => w.id !== correct.id);
+  const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+  const distractors = shuffle(others).slice(0, 3);
+  const choices = shuffle([correct, ...distractors]);
+  quizState.correctIdx = choices.indexOf(correct);
+
+  const showPhonetic = correct.srs < 4;
+
+  if (quizMode === 'meaning') {
+    document.getElementById('quiz-word').textContent = correct.kanji;
+    document.getElementById('quiz-phonetic').textContent = showPhonetic ? (correct.hira || '') : '';
+  } else {
+    document.getElementById('quiz-word').textContent = correct.meaning;
+    document.getElementById('quiz-phonetic').textContent = '';
+  }
+
+  const btns = document.querySelectorAll('.quiz-choice');
+  btns.forEach((btn, i) => {
+    btn.textContent = quizMode === 'meaning' ? choices[i].meaning : choices[i].kanji;
+    btn.className = 'quiz-choice';
+    btn.disabled = false;
+  });
+
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').className = 'quiz-next-btn';
+
+  document.getElementById('quiz-correct').textContent = quizState.correct;
+  document.getElementById('quiz-wrong').textContent = quizState.wrong;
+  document.getElementById('quiz-session').textContent = quizState.session;
+}
+
+function quizAnswer(idx) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  quizState.session++;
+
+  const isCorrect = idx === quizState.correctIdx;
+  const btns = document.querySelectorAll('.quiz-choice');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === quizState.correctIdx) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('quiz-feedback');
+  if (isCorrect) {
+    quizState.correct++;
+    fb.textContent = '✅ Correct!';
+    fb.className = 'quiz-feedback show feedback-correct';
+    recordReview(true);
+  } else {
+    quizState.wrong++;
+    const w = state.words.find(w => w.id === quizState.lastId);
+    fb.textContent = `❌ The answer was: ${quizMode === 'meaning' ? w.meaning : w.kanji}`;
+    fb.className = 'quiz-feedback show feedback-wrong';
+    recordReview(false);
+  }
+
+  // Update word SRS
+  const w = state.words.find(w => w.id === quizState.lastId);
+  if (w) {
+    w.total++;
+    if (isCorrect) { w.correct++; w.srs = Math.min(5, w.srs + 1); }
+    else w.srs = Math.max(0, w.srs - 1);
+    w.nextReview = Date.now() + SRS_INTERVALS[w.srs] * 86400000;
+  }
+  saveState();
+
+  document.getElementById('quiz-correct').textContent = quizState.correct;
+  document.getElementById('quiz-wrong').textContent = quizState.wrong;
+  document.getElementById('quiz-session').textContent = quizState.session;
+
+  const nextBtn = document.getElementById('quiz-next-btn');
+  nextBtn.className = 'quiz-next-btn show';
+}
+
+function quizNext() {
+  quizNew();
+}
+
+// ══════════════════════════════════════
+//  READING (RSS)
+// ══════════════════════════════════════
+let newsLoading = false;
+let currentSource = 'guardian';
+
+const NEWS_SOURCES = {
+  guardian: {
+    label: 'The Guardian',
+    fetch: async () => {
+      // Primary: Guardian Open API (no CORS issues)
+      try {
+        const res = await fetch(
+          'https://content.guardianapis.com/search?show-fields=trailText,body&page-size=10&order-by=newest&api-key=test',
+          { signal: AbortSignal.timeout(10000) }
+        );
+        const data = await res.json();
+        if (data.response?.results?.length) {
+          return data.response.results.map((item, i) => {
+            const raw = item.fields?.body || item.fields?.trailText || '';
+            const tmp = document.createElement('div');
+            tmp.innerHTML = raw;
+            const body = tmp.textContent.replace(/\s+/g, ' ').trim().substring(0, 1500);
+            return {
+              title: item.webTitle || '',
+              body,
+              link: item.webUrl || '',
+              date: item.webPublicationDate || '',
+              id: `news_guardian_${i}`
+            };
+          });
+        }
+      } catch(e) {}
+      // Fallback: Guardian RSS
+      return fetchRSS('https://www.theguardian.com/world/rss', 'guardian');
+    }
+  },
+};
+
+// Generic RSS fetcher with 3 proxy fallbacks
+async function fetchRSS(feedUrl, prefix) {
+  const proxies = [
+    () => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(8000) })
+      .then(r => r.json()).then(data => {
+        if (data.status === 'ok' && data.items?.length) {
+          return data.items.slice(0, 10).map((item, i) => {
+            // Strip all HTML tags from description or content
+            const raw = item.description || item.content || item.summary || '';
+            const tmp = document.createElement('div');
+            tmp.innerHTML = raw;
+            const body = tmp.textContent.replace(/\s+/g, ' ').trim().substring(0, 600);
+            return {
+              title: item.title || '',
+              body,
+              link: item.link || '',
+              date: item.pubDate || '',
+              id: `news_${prefix}_${i}`
+            };
+          });
+        }
+        return null;
+      }),
+    () => fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(8000) })
+      .then(r => r.json()).then(d => parseRSSXML(d.contents || '', prefix)),
+    () => fetch(`https://corsproxy.io/?${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(8000) })
+      .then(r => r.text()).then(text => parseRSSXML(text, prefix)),
+  ];
+  for (const proxyFn of proxies) {
+    try {
+      const result = await proxyFn();
+      if (result?.length) return result;
+    } catch(e) {}
+  }
+  return [];
+}
+
+function parseRSSXML(text, prefix) {
+  if (!text) return null;
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(text, 'text/xml');
+  const items = xml.querySelectorAll('item');
+  if (!items.length) return null;
+  const articles = [];
+  items.forEach((item, i) => {
+    if (i >= 10) return;
+    const title = item.querySelector('title')?.textContent || '';
+    const desc = item.querySelector('description')?.textContent || '';
+    const link = item.querySelector('link')?.textContent || '';
+    const pubDate = item.querySelector('pubDate')?.textContent || '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = desc;
+    articles.push({ title, body: tmp.textContent.substring(0, 600), link, date: pubDate, id: `news_${prefix}_${i}` });
+  });
+  return articles.length ? articles : null;
+}
+
+let hideTranslated = false;
+
+
+function toggleHideTranslated() {
+  hideTranslated = !hideTranslated;
+  document.getElementById('hide-translated-btn').classList.toggle('active', hideTranslated);
+  document.getElementById('hide-translated-btn').title = hideTranslated ? 'Show all articles' : 'Hide translated articles';
+  renderNews();
+}
+
+async function loadNews() {
+  if (newsLoading) return;
+  newsLoading = true;
+  const btn = document.getElementById('news-load-btn');
+  const origText = btn.textContent;
+  btn.textContent = '⏳';
+  btn.disabled = true;
+
+  try {
+    const source = NEWS_SOURCES[currentSource];
+    const articles = await source.fetch();
+    if (articles.length) {
+      state.newsCache[currentSource] = articles;
+      saveState();
+      renderNews();
+      showToast(`Loaded ${articles.length} articles from ${source.label}`);
+    } else {
+      showToast('No articles found. Try again later.');
+      renderNews();
+    }
+  } catch(e) {
+    showToast('Failed to load. Try again later.');
+    renderNews();
+  }
+
+  btn.textContent = '🔄';
+  btn.disabled = false;
+  newsLoading = false;
+}
+
+function renderNews() {
+  const list = document.getElementById('news-list');
+  const articles = state.newsCache[currentSource] || [];
+  if (!articles.length) {
+    const label = NEWS_SOURCES[currentSource]?.label || 'news';
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📰</div>Press "Load Articles" to fetch ${label}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  articles.forEach((a, i) => {
+    const noteKey = a.id;
+    const savedNote = state.newsNotes[noteKey + '_note'] || '';
+    const hasNote = savedNote.trim().length > 0;
+    const div = document.createElement('div');
+    div.className = 'news-item' + (hasNote ? ' news-translated' : '') + (hasNote && hideTranslated ? ' hidden-translated' : '');
+    div.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div style="flex:1">
+          <div class="news-date">${new Date(a.date).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) || a.date}${hasNote ? ' <span style="font-size:10px;color:var(--accent3)">✓ noted</span>' : ''}</div>
+          <div class="news-title">${a.title}</div>
+        </div>
+        <div style="color:var(--text3);font-size:18px;padding-top:14px;flex-shrink:0" class="expand-arrow">›</div>
+      </div>
+      <div class="news-expanded" id="news-exp-${i}">
+        <div class="news-body">${a.body || '<em style="color:var(--text3)">No preview available.</em>'}</div>
+        <a href="${a.link}" target="_blank" class="read-original-btn">Read Full Article on The Guardian →</a>
+        <div class="news-actions">
+          <button class="news-btn" onclick="speakNews('${noteKey}', '${encodeURIComponent(a.title + '. ' + a.body)}')">🔊 Read Aloud</button>
+          <button class="news-btn" onclick="stopSpeak()">⏹ Stop</button>
+        </div>
+        <textarea class="note-area" placeholder="Notes, translations, new vocabulary…" id="note-${i}" onchange="saveNote('${noteKey}', ${i})">${savedNote}</textarea>
+        <button class="add-from-note-btn" onclick="addWordFromNote(${i})">＋ Add word from notes</button>
+      </div>
+    `;
+    div.onclick = (e) => {
+      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+      const exp = document.getElementById(`news-exp-${i}`);
+      const arrow = div.querySelector('.expand-arrow');
+      const isOpen = exp.classList.toggle('open');
+      if (arrow) arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+      if (arrow) arrow.style.transition = 'transform 0.2s ease';
+    };
+    list.appendChild(div);
+  });
+}
+
+function speakNews(key, encoded) {
+  const text = decodeURIComponent(encoded);
+  speakText(text);
+}
+
+function stopSpeak() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function addWordFromNote(idx) {
+  const ta = document.getElementById(`note-${idx}`);
+  const text = (ta?.value || '').trim();
+  // Pre-fill the add word modal with first line of notes as word hint
+  const firstLine = text.split('\n')[0].trim();
+  openAddModal();
+  if (firstLine) document.getElementById('f-word').value = firstLine;
+}
+
+function saveNote(key, idx) {
+  const ta = document.getElementById(`note-${idx}`);
+  state.newsNotes[key + '_note'] = ta.value;
+  saveState();
+}
+
+// ══════════════════════════════════════
+//  VOCAB
+// ══════════════════════════════════════
+let vocabMode = 'list';
+
+document.getElementById('vocab-mode-list').onclick = () => setVocabMode('list');
+document.getElementById('vocab-mode-notes').onclick = () => setVocabMode('notes');
+
+function setVocabMode(mode) {
+  vocabMode = mode;
+  document.getElementById('vocab-mode-list').classList.toggle('active', mode === 'list');
+  document.getElementById('vocab-mode-notes').classList.toggle('active', mode === 'notes');
+  document.getElementById('vocab-list').style.display = mode === 'list' ? 'flex' : 'none';
+  document.getElementById('notes-list').style.display = mode === 'notes' ? 'block' : 'none';
+  document.querySelector('.vocab-search-wrap').style.display = mode === 'list' ? 'block' : 'none';
+  document.querySelector('.vocab-actions-bar').style.display = mode === 'list' ? 'flex' : 'none';
+  if (mode === 'notes') renderNotes();
+}
+
+function renderVocab() {
+  const q = (document.getElementById('vocab-search').value || '').toLowerCase();
+  const filtered = state.words.filter(w =>
+    w.kanji.toLowerCase().includes(q) ||
+    w.meaning.includes(q) ||
+    (w.hira || '').includes(q)
+  );
+  const list = document.getElementById('vocab-list');
+  document.getElementById('vocab-count').textContent = `${filtered.length} / ${state.words.length} words`;
+  list.innerHTML = '';
+
+  const srsLabels = ['New','Learning','','','','Mastered'];
+
+  filtered.forEach(w => {
+    const item = document.createElement('div');
+    item.className = 'vocab-item';
+
+    const pips = [0,1,2,3,4,5].map(n =>
+      `<div class="vocab-srs-pip${n <= w.srs ? ` filled-${w.srs}` : ''}"></div>`
+    ).join('');
+
+    item.innerHTML = `
+      <div style="flex:1;min-width:0">
+        <div class="vocab-word">${w.kanji}</div>
+        <div class="vocab-phonetic">${w.hira || ''}</div>
+        <div class="vocab-meaning">${w.meaning}</div>
+      </div>
+      <div style="flex:0 0 auto;display:flex;align-items:center;gap:10px">
+        <div class="vocab-srs-bar">
+          <div class="vocab-srs-pips">${pips}</div>
+          <div class="vocab-srs-label">${srsLabels[w.srs] || `Lv.${w.srs}`}</div>
+        </div>
+        <div class="vocab-actions">
+          <button class="vocab-action-btn speak" onclick="vocabSpeak(event,'${w.kanji.replace(/'/g,"\\'")}')">🔊</button>
+          <button class="vocab-action-btn edit" onclick="vocabEdit(event,${w.id})">✏️</button>
+          <button class="vocab-action-btn del" onclick="deleteWord(${w.id},event)">🗑</button>
+        </div>
+      </div>
+    `;
+    item.onclick = (e) => {
+      if (e.target.closest('.vocab-actions')) return;
+      vocabEdit(e, w.id);
+    };
+    list.appendChild(item);
+  });
+}
+
+function vocabSpeak(event, word) {
+  event.stopPropagation();
+  speakText(word);
+}
+
+function vocabEdit(event, id) {
+  if (event) event.stopPropagation();
+  const w = state.words.find(w => w.id === id);
+  if (w) openEditModal(w);
+}
+
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  const notes = Object.entries(state.newsNotes).filter(([k]) => k.endsWith('_note')).filter(([,v]) => v.trim());
+  if (!notes.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div>No notes yet. Read articles and add notes!</div>';
+    return;
+  }
+  // Build a lookup from article id → article data
+  const articleMap = {};
+  (state.newsCache['guardian'] || []).forEach(a => { articleMap[a.id] = a; });
+
+  list.innerHTML = '';
+  notes.forEach(([k, note]) => {
+    const articleId = k.replace(/_note$/, '');
+    const article = articleMap[articleId];
+    const item = document.createElement('div');
+    item.className = 'note-list-item';
+    item.innerHTML = `
+      <div class="note-list-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="note-list-title">${article ? article.title : articleId}</div>
+        <span class="note-expand-arrow">›</span>
+      </div>
+      <div class="note-list-body">
+        ${article ? `
+          <div class="note-orig-label">Original</div>
+          <div class="note-orig-text">${article.body || ''}</div>
+          <div class="note-orig-label" style="margin-top:10px">My Notes</div>
+        ` : ''}
+        <div class="note-list-text">${note.replace(/\n/g,'<br>')}</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function deleteWord(id, event) {
+  event.stopPropagation();
+  if (!confirm('Delete this word?')) return;
+  state.words = state.words.filter(w => w.id !== id);
+  // Rebuild queues
+  state.fcQueueEn = buildFcQueue('en');
+  state.fcQueueZh = buildFcQueue('zh');
+  state.fcIdxEn = 0; state.fcIdxZh = 0;
+  renderVocab();
+  renderFcCard();
+  saveState();
+  showToast('Word deleted');
+}
+
+// ── Add / Edit word modal ──
+let editingId = null;
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('f-word').value = '';
+  document.getElementById('f-phonetic').value = '';
+  document.getElementById('f-pos').value = '';
+  document.getElementById('f-meaning').value = '';
+  document.getElementById('f-example').value = '';
+  document.querySelector('#add-modal .modal-title').textContent = 'Add New Word';
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function openEditModal(w) {
+  editingId = w.id;
+  document.getElementById('f-word').value = w.kanji;
+  document.getElementById('f-phonetic').value = w.hira || '';
+  document.getElementById('f-pos').value = w.pos || '';
+  document.getElementById('f-meaning').value = w.meaning;
+  document.getElementById('f-example').value = w.example || '';
+  document.querySelector('#add-modal .modal-title').textContent = 'Edit Word';
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function saveWord() {
+  const kanji = document.getElementById('f-word').value.trim();
+  const meaning = document.getElementById('f-meaning').value.trim();
+  if (!kanji || !meaning) return showToast('Word and meaning are required');
+
+  if (editingId) {
+    const w = state.words.find(w => w.id === editingId);
+    if (w) {
+      w.kanji = kanji;
+      w.hira = document.getElementById('f-phonetic').value.trim();
+      w.pos = document.getElementById('f-pos').value.trim();
+      w.meaning = meaning;
+      w.example = document.getElementById('f-example').value.trim();
+    }
+    showToast('Word updated!');
+  } else {
+    const maxId = Math.max(...state.words.map(w => w.id), DEFAULT_MAX_ID);
+    state.words.push({
+      id: maxId + 1,
+      kanji, hira: document.getElementById('f-phonetic').value.trim(),
+      pos: document.getElementById('f-pos').value.trim(),
+      meaning, example: document.getElementById('f-example').value.trim(),
+      srs: 0, nextReview: 0, correct: 0, total: 0
+    });
+    state.fcQueueEn = buildFcQueue('en');
+    state.fcQueueZh = buildFcQueue('zh');
+    showToast('Word added!');
+  }
+  saveState();
+  renderVocab();
+  renderFcCard();
+  closeModal('add-modal');
+}
+
+// ══════════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════════
+function renderProgress() {
+  const words = state.words;
+  const now = Date.now();
+  const due = words.filter(w => w.nextReview <= now).length;
+  const mastered = words.filter(w => w.srs === 5).length;
+
+  document.getElementById('stat-total').textContent = words.length;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-reviewed').textContent = state.totalReviews;
+  document.getElementById('stat-mastered').textContent = mastered;
+  document.getElementById('due-count').textContent = due;
+
+  const todayGoal = Math.min(state.todayReviews, 10);
+  const pct = (todayGoal / 10) * 100;
+  document.getElementById('goal-fill').style.width = pct + '%';
+  document.getElementById('goal-count').textContent = `${todayGoal}/10`;
+
+  // SRS bars
+  const srsColors = ['#f76e6e','#e8a87c','#9b8ef7','#6de8c4','#4cc9f0','#f72585'];
+  const srsCounts = [0,1,2,3,4,5].map(n => words.filter(w => w.srs === n).length);
+  const maxCount = Math.max(...srsCounts, 1);
+  const barsEl = document.getElementById('srs-bars');
+  barsEl.innerHTML = srsCounts.map((count, i) => `
+    <div class="srs-bar-wrap">
+      <div class="srs-bar-count">${count}</div>
+      <div class="srs-bar" style="height:${Math.max(4,(count/maxCount)*68)}px;background:${srsColors[i]}"></div>
+      <div class="srs-bar-label">${i}</div>
+    </div>
+  `).join('');
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'word-deck-backup.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportCSV() {
+  const header = 'word,phonetic,pos,meaning,example,srs,correct,total\n';
+  const rows = state.words.map(w =>
+    [w.kanji, w.hira||'', w.pos||'', w.meaning, (w.example||'').replace(/,/g,'；'), w.srs, w.correct, w.total].join(',')
+  ).join('\n');
+  const blob = new Blob([header + rows], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'word-deck.csv'; a.click();
+}
+
+function importCSV() {
+  document.getElementById('csv-import-input').click();
+}
+
+function handleImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    if (file.name.endsWith('.json')) {
+      try {
+        const data = JSON.parse(text);
+        if (data.words) {
+          if (confirm(`Import ${data.words.length} words? This will merge with existing.`)) {
+            const existingIds = new Set(state.words.map(w => w.id));
+            let added = 0;
+            const maxId = Math.max(...state.words.map(w => w.id));
+            data.words.forEach((w, i) => {
+              if (!existingIds.has(w.id)) { w.id = maxId + i + 1; state.words.push(w); added++; }
+            });
+            saveState(); renderVocab(); showToast(`Imported ${added} new words`);
+          }
+        }
+      } catch(e) { showToast('Invalid JSON file'); }
+    } else {
+      // CSV import
+      const lines = text.split('\n').filter(Boolean);
+      let added = 0;
+      const maxId = Math.max(...state.words.map(w => w.id));
+      lines.slice(1).forEach((line, i) => {
+        const [kanji, hira, pos, meaning, example] = line.split(',');
+        if (kanji && meaning) {
+          state.words.push({ id: maxId + i + 1, kanji: kanji.trim(), hira: (hira||'').trim(), pos: (pos||'').trim(), meaning: meaning.trim(), example: (example||'').trim(), srs: 0, nextReview: 0, correct: 0, total: 0 });
+          added++;
+        }
+      });
+      saveState(); renderVocab(); showToast(`Imported ${added} words`);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function confirmReset() {
+  if (confirm('Reset ALL progress (SRS, streaks, reviews)? Words will be kept.')) {
+    state.words.forEach(w => { w.srs = 0; w.nextReview = 0; w.correct = 0; w.total = 0; });
+    state.streak = 0; state.totalReviews = 0; state.todayReviews = 0;
+    state.fcQueueEn = buildFcQueue('en'); state.fcQueueZh = buildFcQueue('zh');
+    state.fcIdxEn = 0; state.fcIdxZh = 0;
+    saveState(); renderProgress(); renderVocab(); renderFcCard();
+    showToast('Progress reset!');
+  }
+}
+
+// ══════════════════════════════════════
+//  MODALS & UI UTILS
+// ══════════════════════════════════════
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function closeModalOutside(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Notify ──
+document.getElementById('notify-btn').onclick = () => {
+  document.getElementById('notify-modal').classList.add('open');
+};
+function saveNotify() {
+  const time = document.getElementById('notify-time').value;
+  state.notifyTime = time;
+  saveState();
+  showToast(`Reminder set for ${time}`);
+  closeModal('notify-modal');
+  scheduleNotify(time);
+}
+function scheduleNotify(time) {
+  if (!('Notification' in window)) return;
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') showToast('Notification permission granted!');
+  });
+}
+
+// ── Install Banner ──
+function showInstallBanner() {
+  if (localStorage.getItem('install_shown')) return;
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+
+  const banner = document.getElementById('install-banner');
+  const steps = document.getElementById('install-steps');
+
+  if (isIOS) {
+    steps.innerHTML = '1. Tap the Share button (□↑) at the bottom\n2. Scroll and tap "Add to Home Screen"\n3. Tap "Add" to confirm';
+    banner.classList.add('show');
+    localStorage.setItem('install_shown', '1');
+  } else if (isAndroid) {
+    steps.innerHTML = '1. Tap the ⋮ menu in Chrome\n2. Tap "Add to Home screen"\n3. Tap "Add" to confirm';
+    banner.classList.add('show');
+    localStorage.setItem('install_shown', '1');
+  }
+}
+
+// ══════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  const activeTab = document.querySelector('.tab-panel.active');
+  if (!activeTab) return;
+
+  if (activeTab.id === 'tab-flashcard') {
+    if (e.code === 'Space') { e.preventDefault(); fcFlip(); }
+    if (e.key === '1') fcRate('hard');
+    if (e.key === '2') fcRate('ok');
+    if (e.key === '3') fcRate('easy');
+    if (e.key === 'ArrowRight') fcSkip();
+  }
+  if (activeTab.id === 'tab-quiz') {
+    if (['1','2','3','4'].includes(e.key)) {
+      const btns = document.querySelectorAll('.quiz-choice');
+      if (btns[+e.key - 1]) btns[+e.key - 1].click();
+    }
+    if (e.code === 'Enter') {
+      const nextBtn = document.getElementById('quiz-next-btn');
+      if (nextBtn.classList.contains('show')) nextBtn.click();
+    }
+  }
+});
+
+// ══════════════════════════════════════
+//  START
+// ══════════════════════════════════════
+init();
+</script>
+</body>
+</html>
