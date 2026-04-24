@@ -494,58 +494,65 @@ input, textarea { font-family: var(--font); outline: none; }
 /* ── Install Modal ── */
 #install-modal {
   position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
   display: none; align-items: flex-end; justify-content: center;
+  pointer-events: none;
 }
-#install-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+#install-modal.show { display: flex; }
 #install-modal-inner {
-  background: var(--surface);
-  border-radius: 24px 24px 0 0;
-  padding: 28px 24px 40px;
+  background: #1e1d30;
+  border-radius: 28px 28px 0 0;
+  padding: 32px 24px 48px;
   width: 100%; max-width: 480px;
-  animation: slideUp 0.4s cubic-bezier(0.34,1.1,0.64,1);
-}
-.install-drag-handle {
-  width: 36px; height: 4px; background: var(--surface3);
-  border-radius: 2px; margin: 0 auto 24px;
+  pointer-events: all;
+  animation: slideUp 0.45s cubic-bezier(0.32,0.72,0,1);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
 }
 .install-icon {
-  font-size: 48px; text-align: center; margin-bottom: 14px;
-  display: block;
+  font-size: 36px; text-align: center; margin-bottom: 16px;
+  display: block; line-height: 1;
 }
 .install-modal-title {
-  font-size: 20px; font-weight: 700; text-align: center;
-  margin-bottom: 10px; font-family: var(--serif);
+  font-size: 22px; font-weight: 800; text-align: center;
+  margin-bottom: 14px; color: var(--text); letter-spacing: -0.3px;
 }
 .install-modal-desc {
-  font-size: 14px; color: var(--text2); text-align: center;
-  line-height: 1.7; margin-bottom: 20px;
+  font-size: 14px; color: var(--text2); text-align: left;
+  line-height: 1.75; margin-bottom: 20px;
 }
 .install-steps-box {
-  background: var(--surface2); border-radius: var(--radius-sm);
-  padding: 16px 18px; margin-bottom: 10px;
+  background: var(--surface2);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 12px;
 }
 .install-step {
-  display: flex; align-items: flex-start; gap: 12px;
-  font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: var(--text); line-height: 1.55;
 }
-.install-step:last-child { margin-bottom: 0; }
 .install-step-num {
   width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
-  background: var(--accent2); color: #fff;
-  font-size: 11px; font-weight: 700;
+  background: var(--surface3); color: var(--text2);
+  font-size: 12px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  margin-top: 2px;
+  margin-top: 1px;
+}
+.install-step strong { color: var(--accent2); font-weight: 600; }
+.install-step .share-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--accent2); color: #fff; font-size: 13px;
+  vertical-align: middle; margin: 0 2px;
 }
 .install-modal-note {
   font-size: 12px; color: var(--text3); text-align: center;
-  margin-bottom: 20px; line-height: 1.5;
+  margin-bottom: 20px; line-height: 1.6; padding: 0 4px;
 }
 .install-modal-btn {
-  width: 100%; padding: 15px; border-radius: 14px;
+  width: 100%; padding: 17px; border-radius: 16px;
   background: var(--accent2); color: #fff;
-  font-size: 16px; font-weight: 700; cursor: pointer;
-  transition: filter var(--transition);
+  font-size: 17px; font-weight: 700; cursor: pointer; border: none;
+  transition: filter var(--transition); font-family: var(--font);
 }
 .install-modal-btn:hover { filter: brightness(1.1); }
 
@@ -855,7 +862,6 @@ input, textarea { font-family: var(--font); outline: none; }
 <!-- Install Modal -->
 <div id="install-modal">
   <div id="install-modal-inner">
-    <div class="install-drag-handle"></div>
     <span class="install-icon" id="install-icon">📲</span>
     <div class="install-modal-title" id="install-modal-title">Add to Home Screen</div>
     <div class="install-modal-desc" id="install-modal-desc"></div>
@@ -1939,39 +1945,39 @@ function showInstallBanner() {
   const note = document.getElementById('install-modal-note');
 
   if (isIOS) {
-    icon.textContent = '📱';
+    icon.textContent = '📲';
     title.textContent = 'Add to iPhone Home Screen';
-    desc.textContent = 'Add Word Deck to your home screen to use it like a native app — your words and progress will be saved on your device.';
+    desc.innerHTML = 'Add this app to your home screen to use it like a native app — your words and progress will be safely saved on your device!';
     stepsBox.innerHTML = `
       <div class="install-step">
-        <div class="install-step-num">1</div>
-        <div>Tap the <strong>Share button</strong> <span style="font-size:16px">⎙</span> at the bottom of Safari</div>
+        <div class="install-step-num">①</div>
+        <div>Tap the <span class="share-icon">⎙</span> <strong>Share button</strong> at the bottom of Safari</div>
       </div>
       <div class="install-step">
-        <div class="install-step-num">2</div>
-        <div>Scroll down and tap <strong>"Add to Home Screen"</strong></div>
+        <div class="install-step-num">②</div>
+        <div>Scroll down or tap <strong>"See All"</strong> to show all options</div>
       </div>
       <div class="install-step">
-        <div class="install-step-num">3</div>
-        <div>Tap <strong>"Add"</strong> in the top right to confirm</div>
+        <div class="install-step-num">③</div>
+        <div>Tap <strong>"Add to Home Screen"</strong> → tap <strong>"Add"</strong></div>
       </div>
     `;
     note.textContent = 'After adding, your data will be stored on your device and won\'t disappear when you close the browser.';
   } else {
-    icon.textContent = '🤖';
+    icon.textContent = '📲';
     title.textContent = 'Add to Android Home Screen';
-    desc.textContent = 'Add Word Deck to your home screen for a full-screen experience — your words and progress will be saved on your device.';
+    desc.innerHTML = 'Add this app to your home screen to use it like a native app — your words and progress will be safely saved on your device!';
     stepsBox.innerHTML = `
       <div class="install-step">
-        <div class="install-step-num">1</div>
-        <div>Tap the <strong>⋮ menu</strong> in the top right of Chrome</div>
+        <div class="install-step-num">①</div>
+        <div>Tap the <strong>⋮ menu</strong> in the top-right corner of Chrome</div>
       </div>
       <div class="install-step">
-        <div class="install-step-num">2</div>
+        <div class="install-step-num">②</div>
         <div>Tap <strong>"Add to Home screen"</strong></div>
       </div>
       <div class="install-step">
-        <div class="install-step-num">3</div>
+        <div class="install-step-num">③</div>
         <div>Tap <strong>"Add"</strong> to confirm</div>
       </div>
     `;
